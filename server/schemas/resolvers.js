@@ -4,11 +4,10 @@ const { signToken, AuthenticationError } = require("../utils/auth");
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
-      console.log("context", context);
       if (context.user) {
-        return User.findById(args.user._id);
+        return await User.findById(context.user._id).populate("savedBooks");
       }
-      throw new AuthenticationError("You need to be logged in");
+      throw AuthenticationError;
     },
     users: async () => {
       return await User.find().populate("savedBooks");
@@ -28,9 +27,6 @@ const resolvers = {
       return { token, user };
     },
     login: async (parent, { email, password }) => {
-      console.log("email", email);
-      console.log("password", password);
-
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -62,22 +58,24 @@ const resolvers = {
       return user;
     },
     removeBook: async (parent, args, context) => {
-      console.log("args", args);
-      console.log("context", context);
-
       const user = await User.findById(context.user._id).populate("savedBooks");
 
       if (!user) {
         throw new AuthenticationError("You need to be logged in");
       }
 
-      const book = await Book.findOne({ bookId: args.bookId });
+      let bookIdToRemove;
 
-      const response = await user.savedBooks.id(book._id).deleteOne();
-
-      if (!response.ok) {
-        throw new Exception("delete failed");
+      for (const book of user.savedBooks) {
+        if (book.bookId == args.bookId) {
+          bookIdToRemove = book._id;
+          break;
+        }
       }
+
+      const response = await user.savedBooks.id(bookIdToRemove).deleteOne();
+
+      await user.save();
 
       return user;
     },

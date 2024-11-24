@@ -6,7 +6,12 @@ const GET_ME = gql`
       _id
       username
       email
-      password
+      savedBooks {
+        description
+        title
+        bookId
+        authors
+      }
     }
   }
 `;
