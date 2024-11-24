@@ -12,7 +12,7 @@ module.exports = {
     },
   }),
   // function for our authenticated routes
-  authMiddleware: function (req) {
+  authMiddleware: function ({ req }) {
     let token = req.body.token || req.query.token || req.headers.authorization;
 
     if (req.headers.authorization) {
