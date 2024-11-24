@@ -10,6 +10,9 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in");
     },
+    users: async () => {
+      return await User.find().populate("savedBooks");
+    },
   },
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
