@@ -45,7 +45,7 @@ const resolvers = {
     },
     saveBook: async (parent, args, context) => {
       console.log("args", args);
-      console.log("context", context);
+      console.log("context.user", context.user);
 
       const user = await User.findById(context.user._id).populate("savedBooks");
 
@@ -54,6 +54,7 @@ const resolvers = {
       }
 
       user.savedBooks.push(args.book);
+      await user.save();
 
       return user;
     },
@@ -72,6 +73,7 @@ const resolvers = {
           break;
         }
       }
+      console.log("bookIdToRemove", bookIdToRemove);
 
       const response = await user.savedBooks.id(bookIdToRemove).deleteOne();
 
