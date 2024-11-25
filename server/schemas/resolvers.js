@@ -15,8 +15,6 @@ const resolvers = {
   },
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
-      console.log("args", args);
-
       const user = await User.create({
         username,
         email,
@@ -44,9 +42,6 @@ const resolvers = {
       return { token, user };
     },
     saveBook: async (parent, args, context) => {
-      console.log("args", args);
-      console.log("context.user", context.user);
-
       const user = await User.findById(context.user._id).populate("savedBooks");
 
       if (!user) {
@@ -73,7 +68,6 @@ const resolvers = {
           break;
         }
       }
-      console.log("bookIdToRemove", bookIdToRemove);
 
       const response = await user.savedBooks.id(bookIdToRemove).deleteOne();
 
