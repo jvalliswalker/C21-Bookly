@@ -53,7 +53,7 @@ const resolvers = {
         throw new AuthenticationError("You need to be logged in");
       }
 
-      user.savedBooks.push(args.book);
+      user.savedBooks.push({ ...args.book });
       await user.save();
 
       return user;
