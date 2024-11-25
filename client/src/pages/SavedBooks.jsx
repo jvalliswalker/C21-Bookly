@@ -8,11 +8,14 @@ import { useMutation, useQuery } from "@apollo/client";
 
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
-  const { loading, error, data } = useQuery(GET_ME);
-  const userData = data?.me || {};
+  const { loading, error, data: userDataFromQueryMe } = useQuery(GET_ME);
 
-  const [deleteBook, { error: deleteBookError, data: deleteBookData }] =
-    useMutation(REMOVE_BOOK);
+  const [deleteBook, { error: deleteBookError, data: userDataFromDeleteBook }] =
+    useMutation(REMOVE_BOOK, {
+      refetchQueries: [GET_ME, "me"],
+    });
+
+  const userData = userDataFromDeleteBook?.me || userDataFromQueryMe?.me || {};
 
   if (loading || !userData?.savedBooks) {
     return <div>Loading</div>;
@@ -20,18 +23,12 @@ const SavedBooks = () => {
     return <div>An error occurred</div>;
   }
 
-  // use this to determine if `useEffect()` hook needs to run again
-
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    console.log("bookId", bookId);
     const vars = { variables: { bookId: bookId } };
-    console.log("vars", vars);
 
     try {
       const { data } = await deleteBook(vars);
-
-      console.log("delete data", data);
     } catch (err) {
       console.log("err", err);
     }
