@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Container, Col, Form, Button, Card, Row } from "react-bootstrap";
 
 import Auth from "../utils/auth";
@@ -18,7 +18,7 @@ const SearchBooks = () => {
   // create state for holding our search field data
   const [searchInput, setSearchInput] = useState("");
 
-  const userData = getMeData?.me || getMeSaveBookData?.me || {};
+  const userData = getMeSaveBookData?.me || getMeData?.me || {};
 
   const savedBookIds = () => {
     if (userData) {
