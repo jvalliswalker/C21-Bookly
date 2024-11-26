@@ -28,7 +28,7 @@ const startServer = async () => {
   );
   // if we're in production, serve client/build as static assets
   if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../client/build")));
+    app.use(express.static(path.join(__dirname, "../client/dist/public")));
   }
 
   app.get("*", (req, res) => {
