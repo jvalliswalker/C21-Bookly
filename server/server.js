@@ -21,7 +21,7 @@ const startServer = async () => {
   app.use(express.json());
 
   app.use(
-    "/graphql",
+    "/graphql", // <-- being accessed via the ApolloServer server
     expressMiddleware(server, {
       context: authMiddleware,
     })
