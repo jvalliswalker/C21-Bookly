@@ -30,12 +30,14 @@ const authLink = setContext((_, { headers }) => {
 const client = new ApolloClient({
   // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache(), // storing in memory
 });
 
 function App() {
   return (
     <>
+      {/* Not the same as "Context", specific to ApolloProvider */}
+      {/* client is referenced during mutations/queries (useQuery and useMutation hooks) */}
       <ApolloProvider client={client}>
         <Navbar />
         <Outlet />
